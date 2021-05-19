@@ -1,0 +1,131 @@
+from flask import Flask, render_template, redirect, url_for, send_file, Markup, flash
+from flask_bootstrap import Bootstrap
+from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
+from wtforms import StringField, SubmitField, SelectField
+from wtforms.validators import DataRequired, Email
+from modules import run_lmm
+from flask import render_template
+
+from flask_uploads import configure_uploads, UploadSet, TEXT
+
+import plot_layout
+
+app = Flask(__name__)
+
+# Flask-WTF requires an enryption key - the string can be anything
+app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
+app.config['UPLOADED_TEXT_DEST'] = 'uploads'
+
+# File upload configuration
+files_to_upload = UploadSet('text', TEXT)
+configure_uploads(app, files_to_upload)
+
+# Flask-Bootstrap requires this line
+Bootstrap(app)
+
+
+@app.route('/run_gwas',methods=['POST'])
+def run_gwas(geno, pheno):
+    if geno == "Barley WGS":
+        geno_file = "barley/wgs_200cc_0025_003"
+    if pheno == "BGT_96hai":
+        pheno_file = "barley/bgt_bin_blues.txt"
+
+    results_df = run_lmm(geno_file, pheno_file)
+    results_df.to_csv("out.csv")
+    #return results_df
+
+
+# Flask-WTF forms
+class NameForm(FlaskForm):
+    name = StringField('Email Adress', validators=[DataRequired()], default='luecks@gmail.com')
+    geno_file = SelectField("Species", choices=['Barley WGS'])
+    pheno_file = SelectField('Choose Phenotype or upload file', choices=['BGT_96hai'])
+    pheno_upload2 = FileField('test')
+
+    ids_file = SelectField('Choose Core collection or upload file', choices=['None', '200cc'])
+    #id_upload = FileField(' ')
+    kinship_file = StringField('Upload Kinship matrix', render_kw={"placeholder": "optional"})
+    #kinship_upload = FileField(' ')
+
+    submit = SubmitField('Submit')
+
+
+# all Flask routes below
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    names = ['luecks@gmail.com']
+    form = NameForm()
+
+    message = ""
+
+    if form.validate_on_submit():
+        name = form.name.data
+        pheno = form.pheno_file.data
+        geno = form.geno_file.data
+        #message2 = Markup("<h1>Voila! Platform is ready to used</h1>")
+        #flash(message2)
+
+
+        run_gwas(geno, pheno)
+        plot_layout.start_plotting('out.csv')
+
+        #print (form.pheno_upload2.data)
+        #filename = files_to_upload.save(form.pheno_upload2.data)
+        #print (filename)
+
+
+        #f = form.pheno_upload.file
+        #filename = secure_filename(f.filename)
+        #wgs_200cc_0025_003
+        #print (name, pheno, geno, f, filename)
+        #run(geno, pheno)
+        #redirect("plot_bok.html")
+
+        #if name.lower() in names:
+            # empty the form field
+            #form.name.data = ""
+            #hello()
+            #id = get_id(ACTORS, name)
+            # redirect the browser to another route and template
+            #return redirect( url_for('actor', id=id) )
+            #results_df = run(geno, pheno)
+
+            #plot()
+            #return render_template('plot_bok.html')
+
+            #return redirect("< a href =”plot_bok.html” target =”_blank” > my awesome link < / a >")
+
+
+            # results_df = run(geno, pheno)
+            #
+            # bytes_obj = get_plot_as_bytes(results_df)
+            # return send_file(bytes_obj,
+            #                  attachment_filename='plot.png',
+            #                  mimetype='image/png')
+            #return redirect("plot_bok")
+            # plots = []
+            # plots.append(make_plot())
+            #
+            # return render_template('dashboard.html', plots=plots)
+
+        #else:
+            #message = "That actor is not in our database."
+    return render_template('index.html', names=names, form=form, message=message)
+
+
+# 2 routes to handle errors - they have templates too
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
+
+
+# keep this as is
+if __name__ == '__main__':
+    app.run(debug=True)
