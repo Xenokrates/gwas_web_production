@@ -1,6 +1,7 @@
 from bokeh.io import output_file, show
 from bokeh.layouts import row
 from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource, Row, Column, CustomJS, DataTable, TableColumn
 
 
 import pandas as pd
@@ -10,17 +11,13 @@ from pandas import DataFrame
 from bokeh.models import ColumnDataSource, HoverTool, FixedTicker
 import re
 
-N = 1000
-
-
+N = 50000
 
 
 def sorted_chrs(l):
     """ Sort the given iterable in the way that humans expect."""
     convert = lambda text: int(text) if text.isdigit() else text
-
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
-
     return sorted(l, key = alphanum_key)
 
 
@@ -50,6 +47,7 @@ def prepare_data(data1m):
                     'abspos': data['pos'],
                     'pval1': -np.log10(data['pval1']),
                     'pval1_q': -np.log10(data['pval1_q'])})
+    ts['gene'] = 'my gene'
 
     color_sequence = ['#7fc97f', "#beaed4", '#fdc086']
     upper_bound = np.ceil(np.max(ts['pval1']) + .51)
@@ -89,7 +87,7 @@ def plot_qq(source):
                 ("-log10(pval1,pval1_q)", "(@pval1, @pval1_q)"),
             ]
         )
-    toolsq = ['reset', 'wheel_zoom', 'pan', 'box_select', hoverq]
+    toolsq = ["tap","pan","box_zoom","wheel_zoom","save","reset", hoverq]
     pq1 = figure(title="Quantile-Quantile Plot",plot_width=900, plot_height=900, tools=toolsq)
     pq1.line([0, 7], [0, 7], line_width=3, color="black", alpha=0.5, line_dash=[4, 4])
     rq1 = pq1.circle('pval1_q', 'pval1', source=source, line_color=None, size=6)
@@ -110,10 +108,7 @@ def plot_mahnhatten(source, cut1, ts, upper_bound, xtixks_pos, chrs):
             ("-log10(p-value)", "@pval1"),
         ]
     )
-    tools1 = ['reset', 'xwheel_zoom', 'xpan', 'box_select', hover1]
-
-
-
+    tools1 = ["tap","pan","box_zoom","wheel_zoom","save","reset", hover1]
 
     p1 = figure(title="Manhatten Plot",
                 plot_width=1500,
@@ -136,6 +131,17 @@ def plot_mahnhatten(source, cut1, ts, upper_bound, xtixks_pos, chrs):
     return p1
 
 
+def get_table(source):
+    columns = [
+        TableColumn(field="chr", title="Chromosom"),
+        TableColumn(field="snp", title="SNP"),
+        TableColumn(field="pval1", title="p-Value"),
+        TableColumn(field="gene", title="Gene Annotation")
+    ]
+    dt1 = DataTable(source=source, columns=columns, width=900, height=300)
+    return dt1
+
+
 def plot_both(plot1, plot2):
     output_file("test.html")
     show(row(plot1, plot2))
@@ -154,4 +160,6 @@ def start_plotting(gwas_file):
     source, cut1, ts, upper_bound, xtixks_pos, chrs = prepare_data(data1m)
     plot1 = plot_mahnhatten(source, cut1, ts, upper_bound, xtixks_pos, chrs)
     plot2 = plot_qq(source)
-    plot_both(plot1, plot2)
+    dt1 = get_table(source)
+    show(Column(Row(plot1, plot2), Row(dt1)))
+    #plot_both(plot1, plot2)
