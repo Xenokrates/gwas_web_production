@@ -2,7 +2,7 @@ from bokeh.io import output_file, show
 from bokeh.layouts import row
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, Row, Column, CustomJS, DataTable, TableColumn
-
+from bokeh.io import curdoc
 
 import pandas as pd
 import numpy as np
@@ -144,6 +144,7 @@ def get_table(source):
 
 def plot_both(plot1, plot2):
     output_file("test.html")
+
     show(row(plot1, plot2))
 
 

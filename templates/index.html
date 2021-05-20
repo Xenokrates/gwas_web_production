@@ -4,7 +4,7 @@
 {% block styles %}
 {{ super() }}
 	<style>
-		body { background: #e8f1f9; }
+		body { background: #E2E5DE; }
 	</style>
 {% endblock %}
 
@@ -55,7 +55,7 @@ Best Movie Actors
               </div>
 
               <div class="form-group col-md-6">
-                {{ wtf.form_field(form.pheno_upload2,  class='form-control', placeholder='') }}
+                {{ wtf.form_field(form.pheno_upload,  class='form-control', placeholder='') }}
               </div>
             </div>
 
@@ -66,12 +66,15 @@ Best Movie Actors
               <div class="form-group col-md-6">
                 {{ wtf.form_field(form.ids_file, class='form-control', placeholder='ids_file') }}
               </div>
+                 <div class="form-group col-md-6">
+                {{ wtf.form_field(form.id_upload,  class='form-control', placeholder='') }}
+              </div>
 
             </div>
 
           <div class="row">
               <div class="form-group col-md-6">
-                {{ wtf.form_field(form.kinship_file, class='form-control', placeholder='Optional') }}
+                {{ wtf.form_field(form.kinship_upload, class='form-control', placeholder='Optional') }}
               </div>
 
             </div>

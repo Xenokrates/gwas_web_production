@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, send_file, Markup, flash
+from flask import Flask,  request,jsonify, render_template, redirect, url_for, send_file, Markup, flash
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired, FileAllowed
@@ -41,12 +41,13 @@ def run_gwas(geno, pheno):
 class NameForm(FlaskForm):
     name = StringField('Email Adress', validators=[DataRequired()], default='luecks@gmail.com')
     geno_file = SelectField("Species", choices=['Barley WGS'])
-    pheno_file = SelectField('Choose Phenotype or upload file', choices=['BGT_96hai'])
-    pheno_upload2 = FileField('test')
+    pheno_file = SelectField('Choose Phenotype', choices=['BGT_96hai'])
+    pheno_upload = FileField('Upload Phenotype')
 
-    ids_file = SelectField('Choose Core collection or upload file', choices=['None', '200cc'])
-    #id_upload = FileField(' ')
-    kinship_file = StringField('Upload Kinship matrix', render_kw={"placeholder": "optional"})
+    ids_file = SelectField('Choose Core collection', choices=['None', '200cc'])
+    id_upload = FileField('Upload ID List')
+    #kinship_file = StringField('Upload Kinship matrix', render_kw={"placeholder": "optional"})
+    kinship_upload = FileField('Upload Kinship matrix')
     #kinship_upload = FileField(' ')
 
     submit = SubmitField('Submit')
@@ -64,15 +65,14 @@ def index():
         name = form.name.data
         pheno = form.pheno_file.data
         geno = form.geno_file.data
-        #message2 = Markup("<h1>Voila! Platform is ready to used</h1>")
-        #flash(message2)
+
 
 
         run_gwas(geno, pheno)
         plot_layout.start_plotting('out.csv')
 
-        #print (form.pheno_upload2.data)
-        #filename = files_to_upload.save(form.pheno_upload2.data)
+        #print (form.pheno_upload.data)
+        #filename = files_to_upload.save(form.pheno_upload.data)
         #print (filename)
 
 
@@ -114,6 +114,16 @@ def index():
             #message = "That actor is not in our database."
     return render_template('index.html', names=names, form=form, message=message)
 
+
+@app.route('/gwas', methods=['GET', 'POST'])
+def gwas():
+
+    data = request.get_json(force=True)
+    return jsonify(data)
+    #prediction = model.predict([np.array(list(data.values()))])
+
+    #output = prediction[0]
+    #return jsonify(output)
 
 # 2 routes to handle errors - they have templates too
 @app.errorhandler(404)
