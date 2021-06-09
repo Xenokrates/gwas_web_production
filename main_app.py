@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 # Flask-WTF requires an enryption key - the string can be anything
 app.config['SECRET_KEY'] = 'C2HWGVoMGfNTBsrYQg8EcMrdTimkZfAb'
-app.config['UPLOADED_TEXT_DEST'] = 'uploads'
+app.config['UPLOADED_TEXT_DEST'] = 'data/uploads'
 
 # File upload configuration
 files_to_upload = UploadSet('text', TEXT)
@@ -31,9 +31,11 @@ def run_gwas(geno, pheno):
         geno_file = "barley/wgs_200cc_0025_003"
     if pheno == "BGT_96hai":
         pheno_file = "barley/bgt_bin_blues.txt"
+    else:
+        pheno_file = pheno
 
     results_df = run_lmm(geno_file, pheno_file)
-    results_df.to_csv("out.csv")
+    results_df.to_csv("data/results/out.csv")
     #return results_df
 
 
@@ -41,7 +43,7 @@ def run_gwas(geno, pheno):
 class NameForm(FlaskForm):
     name = StringField('Email Adress', validators=[DataRequired()], default='luecks@gmail.com')
     geno_file = SelectField("Species", choices=['Barley WGS'])
-    pheno_file = SelectField('Choose Phenotype', choices=['BGT_96hai'])
+    pheno_file = SelectField('Choose Phenotype', choices=['None', 'BGT_96hai'])
     pheno_upload = FileField('Upload Phenotype')
 
     ids_file = SelectField('Choose Core collection', choices=['None', '200cc'])
@@ -63,12 +65,26 @@ def index():
 
     if form.validate_on_submit():
         name = form.name.data
-        pheno = form.pheno_file.data
+        #pheno = form.pheno_file.data
         geno = form.geno_file.data
+        if form.pheno_upload.data:
+            pheno = files_to_upload.save(form.pheno_upload.data)
+            pheno = "uploads/" + pheno
+        else:
+            pheno = form.pheno_file.data
+
+        if pheno == "None" or pheno is None:
+            message = "Please upload a phenotype file or choose a phenotype."
+        else:
+            message = ""
+            run_gwas(geno, pheno)
+            plot_layout.start_plotting('data/results/out.csv')
+            message = "Anaylsis done, please check your Email."
+        #print (pheno)
         #flash('Looks like you have changed your name!')
 
-        run_gwas(geno, pheno)
-        plot_layout.start_plotting('out.csv')
+
+        #plot_layout.start_plotting('out.csv')
 
 
         #print (form.pheno_upload.data)
