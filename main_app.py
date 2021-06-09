@@ -8,7 +8,7 @@ from modules import run_lmm
 from flask import render_template
 
 from flask_uploads import configure_uploads, UploadSet, TEXT
-
+# https://getbootstrap.com/docs/4.0/components/modal/
 import plot_layout
 
 app = Flask(__name__)
@@ -65,11 +65,11 @@ def index():
         name = form.name.data
         pheno = form.pheno_file.data
         geno = form.geno_file.data
-
-
+        #flash('Looks like you have changed your name!')
 
         run_gwas(geno, pheno)
         plot_layout.start_plotting('out.csv')
+
 
         #print (form.pheno_upload.data)
         #filename = files_to_upload.save(form.pheno_upload.data)

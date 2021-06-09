@@ -4,13 +4,13 @@
 {% block styles %}
 {{ super() }}
 	<style>
-		body { background: #E2E5DE; }
+		body { background: #ffffff ; }
 	</style>
 {% endblock %}
 
 
 {% block title %}
-Best Movie Actors
+GWAS Webservice at IPK
 {% endblock %}
 
 
@@ -18,11 +18,15 @@ Best Movie Actors
 
 {% block content %}
 
-<div class="flashes">
-  {% for message in get_flashed_messages() %}
-    {{ message }}
-  {% endfor %}
-</div>
+<style>
+img {
+  opacity: 0.9;
+}
+</style>
+<center>
+    <img src="static/gwas_banner.png" alt="Forest" width="750" height="300">
+</center>
+
 
 <div class="container">
 
@@ -30,9 +34,9 @@ Best Movie Actors
   <div class="row">
     <div class="col-md-10 col-lg-8 mx-lg-auto mx-md-auto">
 
-      <h1 class="pt-5 pb-2">GWAS Webservice </h1>
+      <h2 class="pt-5 pb-2"></h2>
 
-      <p class="lead">Hello</p>
+      <p class="lead"> </p>
 
 
 
@@ -61,7 +65,6 @@ Best Movie Actors
 
 
 
-
             <div class="row">
               <div class="form-group col-md-6">
                 {{ wtf.form_field(form.ids_file, class='form-control', placeholder='ids_file') }}
@@ -84,8 +87,28 @@ Best Movie Actors
 
 
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Submit </button>
   </form>
+
+        <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Information</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        GWAS analysis started, you will receive an Email with your results ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
       <p class="pt-5"><strong>{{ message }}</strong></p>
 
