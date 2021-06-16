@@ -49,6 +49,7 @@ def prepare_data(data1m):
                     'pval1_q': -np.log10(data['pval1_q'])})
     ts['gene'] = 'my gene'
 
+
     color_sequence = ['#7fc97f', "#beaed4", '#fdc086']
     upper_bound = np.ceil(np.max(ts['pval1']) + .51)
 
@@ -74,6 +75,7 @@ def prepare_data(data1m):
 
     #print (ts)
     source = ColumnDataSource(data=ts)
+    print (source)
     return source, cut1, ts, upper_bound, xtixks_pos, chrs
 
 
@@ -135,8 +137,10 @@ def get_table(source):
     columns = [
         TableColumn(field="chr", title="Chromosom"),
         TableColumn(field="snp", title="SNP"),
-        TableColumn(field="pval1", title="p-Value"),
-        TableColumn(field="gene", title="Gene Annotation")
+        TableColumn(field="pvalue", title="p-Value"),
+        #TableColumn(field="pval1", title="-LOG10(p-Value)"),
+
+       # TableColumn(field="gene", title="Gene Annotation")
     ]
     dt1 = DataTable(source=source, columns=columns, width=900, height=300)
     return dt1

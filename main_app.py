@@ -24,7 +24,7 @@ configure_uploads(app, files_to_upload)
 # Flask-Bootstrap requires this line
 Bootstrap(app)
 
-
+# -math.log10(0.05 / len(pvals))
 @app.route('/run_gwas',methods=['POST'])
 def run_gwas(geno, pheno):
     if geno == "Barley WGS":
@@ -33,7 +33,7 @@ def run_gwas(geno, pheno):
         pheno_file = "barley/bgt_bin_blues.txt"
     else:
         pheno_file = pheno
-
+    # fast-lmm requires the fam file in a specific way and chromosomes should be labeled with ints (but not 0)
     results_df = run_lmm(geno_file, pheno_file)
     results_df.to_csv("data/results/out.csv")
     #return results_df
