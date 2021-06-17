@@ -1,6 +1,6 @@
+mkl
 numpy==1.18.1
 scipy==1.4.1
-mkl==2019.0
 fastlmm==0.5.5
 email-validator==1.1.2
 flask==1.1.2
