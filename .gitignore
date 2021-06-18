@@ -1,1 +1,7 @@
+__pycache__/*
+data/resutls/*
+## Don't track the test environment
 start_gwas_test_env.sh
+stderr.log
+stdout.log
+
