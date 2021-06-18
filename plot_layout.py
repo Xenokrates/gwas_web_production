@@ -166,5 +166,6 @@ def start_plotting(gwas_file):
     plot1 = plot_mahnhatten(source, cut1, ts, upper_bound, xtixks_pos, chrs)
     plot2 = plot_qq(source)
     dt1 = get_table(source)
+    output_file("test.html")
     show(Column(Row(plot1, plot2), Row(dt1)))
     #plot_both(plot1, plot2)
