@@ -24,9 +24,11 @@ configure_uploads(app, files_to_upload)
 # Flask-Bootstrap requires this line
 Bootstrap(app)
 
-# -math.log10(0.05 / len(pvals))
+
 @app.route('/run_gwas',methods=['POST'])
 def run_gwas(geno, pheno):
+    """Run GWAS via fast-lmm.
+    Currently with some small test data from Bridge."""
     if geno == "Barley WGS":
         geno_file = "barley/wgs_200cc_0025_003"
     if pheno == "BGT_96hai":
@@ -41,6 +43,7 @@ def run_gwas(geno, pheno):
 
 # Flask-WTF forms
 class NameForm(FlaskForm):
+    """Forms."""
     name = StringField('Email Adress', validators=[DataRequired()], default='luecks@gmail.com')
     geno_file = SelectField("Species", choices=['Barley WGS'])
     pheno_file = SelectField('Choose Phenotype', choices=['None', 'BGT_96hai'])
@@ -86,7 +89,6 @@ def index():
 
 @app.route('/gwas', methods=['GET', 'POST'])
 def gwas():
-
     data = request.get_json(force=True)
     return jsonify(data)
 
