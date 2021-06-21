@@ -80,54 +80,7 @@ def index():
             run_gwas(geno, pheno)
             plot_layout.start_plotting('data/results/out.csv')
             message = "Anaylsis done, please check your Email."
-        #print (pheno)
-        #flash('Looks like you have changed your name!')
 
-
-        #plot_layout.start_plotting('out.csv')
-
-
-        #print (form.pheno_upload.data)
-        #filename = files_to_upload.save(form.pheno_upload.data)
-        #print (filename)
-
-
-        #f = form.pheno_upload.file
-        #filename = secure_filename(f.filename)
-        #wgs_200cc_0025_003
-        #print (name, pheno, geno, f, filename)
-        #run(geno, pheno)
-        #redirect("plot_bok.html")
-
-        #if name.lower() in names:
-            # empty the form field
-            #form.name.data = ""
-            #hello()
-            #id = get_id(ACTORS, name)
-            # redirect the browser to another route and template
-            #return redirect( url_for('actor', id=id) )
-            #results_df = run(geno, pheno)
-
-            #plot()
-            #return render_template('plot_bok.html')
-
-            #return redirect("< a href =”plot_bok.html” target =”_blank” > my awesome link < / a >")
-
-
-            # results_df = run(geno, pheno)
-            #
-            # bytes_obj = get_plot_as_bytes(results_df)
-            # return send_file(bytes_obj,
-            #                  attachment_filename='plot.png',
-            #                  mimetype='image/png')
-            #return redirect("plot_bok")
-            # plots = []
-            # plots.append(make_plot())
-            #
-            # return render_template('dashboard.html', plots=plots)
-
-        #else:
-            #message = "That actor is not in our database."
     return render_template('index.html', names=names, form=form, message=message)
 
 
@@ -136,10 +89,7 @@ def gwas():
 
     data = request.get_json(force=True)
     return jsonify(data)
-    #prediction = model.predict([np.array(list(data.values()))])
 
-    #output = prediction[0]
-    #return jsonify(output)
 
 # 2 routes to handle errors - they have templates too
 @app.errorhandler(404)
