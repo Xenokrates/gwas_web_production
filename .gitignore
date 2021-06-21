@@ -6,4 +6,5 @@ data/uploads/*
 start_gwas_test_env.sh
 stderr.log
 stdout.log
+test.html
 
